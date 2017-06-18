@@ -1,8 +1,13 @@
 import random
+import threading
 import time
 
 import requests
+import thread
 
+topic_list = [
+    "sports", "coworking", "nike", "decathlon", "food", "technology", "real madrid", "coca-cola"
+]
 mac_list = []
 
 
@@ -30,14 +35,33 @@ def pick_random_mac():
     return random.choice(mac_list)
 
 
+class GenerateProbeThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        generate_probe()
+
+
 def generate_probe_chunk(chunk_size):
     for i in range(0, chunk_size):
-        generate_probe()
+        new_thread = GenerateProbeThread()
+        new_thread.start()
+
+
+def pick_topics():
+    num_topics = random.randint(1, len(topic_list))
+    return random.sample(topic_list, num_topics)
+
+
+def generate_nearby_location():
+    pass
 
 
 def generate_probe():
     random_mac = pick_random_mac()
     timestamp = int(time.time())
+    topics = pick_topics()
     url = "https://mctrack-6a99b.firebaseio.com/customers/" + \
           str(random_mac) + \
           "/probes/" + \
@@ -61,19 +85,15 @@ def generate_probe():
             "type": "FeatureCollection"
         },
         "timestamp": timestamp,
-        "topics": [
-            {"name": "sports"},
-            {"name": "coworking"},
-            {"name": "technology"}
-        ]
+        "topics": topics
     }
     status = requests.put(url, json=payload)
     print(random_mac + " " + str(status.status_code))
 
 
 def main():
-    generate_mac_list(10)
-    generate_probe_chunk(100)
+    generate_mac_list(50)
+    generate_probe_chunk(1000)
 
 
 if __name__ == "__main__":
