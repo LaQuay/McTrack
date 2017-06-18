@@ -1,5 +1,7 @@
+var mymap;
+
 function loadMap() {
-  var mymap = L.map('map').setView([50.074875, 14.437353], 14);
+  mymap = L.map('map').setView([50.074875, 14.437353], 14);
 
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
     maxZoom: 18,
@@ -38,6 +40,7 @@ function loadMap() {
 
 function updateMarkers() {
   setInterval(function(){callUpdateMarkers()}, 5000);
+  callUpdateMarkers();
 }
 
 function callUpdateMarkers() {
@@ -58,6 +61,22 @@ function callUpdateMarkers() {
   request.send(null);
 }
 
-function drawMarkers(response) {  
-  console.log(response);
+function drawMarkers(response) {
+  //console.log(response);
+  //TODO for each marker
+
+  var userID = "User66593";
+  var locationNames = ["Cartier", "Bikes"];
+  var locationTypes = ["Establishment", "Sport"];
+
+  var stringToPrint = "<b>" + userID + "</b><br /><br />";
+
+  var index;
+  for (index = 0; index < locationNames.length; index++) {
+    stringToPrint += locationNames[index] + ", " + locationTypes[index];
+    stringToPrint += "<br />";
+  }
+
+  L.marker([50.088080,  14.420406]).addTo(mymap)
+    .bindPopup(stringToPrint);
 }
