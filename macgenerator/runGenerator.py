@@ -35,7 +35,7 @@ def pick_random_mac():
     return random.choice(mac_list)
 
 
-class generateProbeThread(threading.Thread):
+class GenerateProbeThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -45,8 +45,8 @@ class generateProbeThread(threading.Thread):
 
 def generate_probe_chunk(chunk_size):
     for i in range(0, chunk_size):
-        thread1 = generateProbeThread()
-        thread1.start()
+        new_thread = GenerateProbeThread()
+        new_thread.start()
 
 
 def pick_topics():
