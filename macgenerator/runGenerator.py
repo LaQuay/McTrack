@@ -3,6 +3,9 @@ import time
 
 import requests
 
+topic_list = [
+    "sports", "coworking", "nike", "decathlon", "food", "technology", "real madrid", "coca-cola"
+]
 mac_list = []
 
 
@@ -35,9 +38,15 @@ def generate_probe_chunk(chunk_size):
         generate_probe()
 
 
+def pick_topics():
+    num_topics = random.randint(0, len(topic_list))
+    return random.sample(topic_list, num_topics)
+
+
 def generate_probe():
     random_mac = pick_random_mac()
     timestamp = int(time.time())
+    topics = pick_topics()
     url = "https://mctrack-6a99b.firebaseio.com/customers/" + \
           str(random_mac) + \
           "/probes/" + \
@@ -61,11 +70,7 @@ def generate_probe():
             "type": "FeatureCollection"
         },
         "timestamp": timestamp,
-        "topics": [
-            {"name": "sports"},
-            {"name": "coworking"},
-            {"name": "technology"}
-        ]
+        "topics": topics
     }
     status = requests.put(url, json=payload)
     print(random_mac + " " + str(status.status_code))
