@@ -9,6 +9,7 @@ type_list = [
     "sports", "coworking", "nike", "decathlon", "food", "technology", "real madrid", "coca-cola"
 ]
 mac_list = []
+token = "AIzaSyCWA2TGSeqZR2h_TPqOQfgHb_N0S-4geL0"
 
 
 class ProbeGeneratorThread(threading.Thread):
@@ -19,38 +20,13 @@ class ProbeGeneratorThread(threading.Thread):
         generate_probe()
 
 
-class NearbyCoordinatesGenerator:
-
-    def generate_nearby_to(self, location):
-        #TODO: IMPLEMENT HERE LAQUAY
-        lat = location['lat']
-        lng = location['lng']
-        radius = 200
-        rangeX = (0, 2500)
-        rangeY = (0, 2500)
-        qty = 10  # or however many points you want
-
-        # Generate a set of all points within 200 of the origin, to be used as offsets later
-        # There's probably a more efficient way to do this.
-        deltas = set()
-        for x in range(-radius, radius + 1):
-            for y in range(-radius, radius + 1):
-                if x * x + y * y <= radius * radius:
-                    deltas.add((x, y))
-
-        randPoints = []
-        excluded = set()
-        i = 0
-        while i < qty:
-            x = random.randrange(*rangeX)
-            y = random.randrange(*rangeY)
-            if (x, y) in excluded: continue
-            randPoints.append((x, y))
-            i += 1
-            excluded.update((x + dx, y + dy) for (dx, dy) in deltas)
-
-        print(randPoints)
-        return randPoints
+def generate_nearby_to(location):
+    lat = location['lat']
+    lng = location['lng']
+    new_location = location
+    new_location['lat'] = lat + random.uniform(0.0001, 0.0009)
+    new_location['lng'] = lng + random.uniform(0.0001, 0.0009)
+    return new_location
 
 
 def generate_random_mac():
@@ -94,7 +70,9 @@ def pick_random_types():
 
 
 def generate_nearby_location():
-    return {"lat": 50.088080, "lng": 14.420406}
+    location = {"lat": 50.088080, "lng": 14.420406}
+    new_location = generate_nearby_to(location)
+    return new_location
 
 
 def get_types_from_gmaps(location):
@@ -103,7 +81,7 @@ def get_types_from_gmaps(location):
     lng = str(location['lng'])
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + \
           "location=" + lat + ',' + lng + \
-          "&radius=50&type=establishment&key=AIzaSyC0N7To1nSSIqAVHIvbs0FpLa3gIFfhP0k"
+          "&radius=50&type=establishment&key=" + token
     response = requests.get(url)
     establishments = json.loads(response.content)['results']
     for element in establishments:
@@ -135,12 +113,10 @@ def generate_probe():
 
 def main():
     get_types_from_gmaps(generate_nearby_location())
-    gen = NearbyCoordinatesGenerator()
-    gen.generate_nearby_to(generate_nearby_location())
 
-    # generate_mac_list(50)
-    # generate_probe_chunk_threaded(300)
-    # generate_probe_chunk(1000)
+    generate_mac_list(30)
+    generate_probe_chunk_threaded(100)
+    generate_probe_chunk(10)
 
 
 if __name__ == "__main__":
