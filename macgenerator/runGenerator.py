@@ -1,7 +1,9 @@
 import random
+import threading
 import time
 
 import requests
+import thread
 
 topic_list = [
     "sports", "coworking", "nike", "decathlon", "food", "technology", "real madrid", "coca-cola"
@@ -33,14 +35,27 @@ def pick_random_mac():
     return random.choice(mac_list)
 
 
+class generateProbeThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        generate_probe()
+
+
 def generate_probe_chunk(chunk_size):
     for i in range(0, chunk_size):
-        generate_probe()
+        thread1 = generateProbeThread()
+        thread1.start()
 
 
 def pick_topics():
     num_topics = random.randint(1, len(topic_list))
     return random.sample(topic_list, num_topics)
+
+
+def generate_nearby_location():
+    pass
 
 
 def generate_probe():
