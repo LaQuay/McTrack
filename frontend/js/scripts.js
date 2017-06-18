@@ -44,7 +44,7 @@ function updateMarkers() {
 }
 
 function callUpdateMarkers() {
-  var URL_UPDATE_MARKERS = "http://httpbin.org/get";
+  var URL_UPDATE_MARKERS = "https://mctrack-6a99b.firebaseio.com/customers.json?auth=XyGsxNV6kJdDSh4PxPKApPpwi6n051YqVao4uLfV";
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4) {
@@ -64,19 +64,27 @@ function callUpdateMarkers() {
 function drawMarkers(response) {
   //console.log(response);
   //TODO for each marker
+  var responseJson = JSON.parse(response);
+  console.log(responseJson);
+  for (key in responseJson) {
+    //console.log(responseJson[key]);
+    for (probes in responseJson[key]['probes']) {
+      console.log(responseJson[key]['probes'][probes]['location']);
 
-  var userID = "User66593";
-  var locationNames = ["Cartier", "Bikes"];
-  var locationTypes = ["Establishment", "Sport"];
+      var userID = key;
+      var locationNames = ["Cartier", "Bikes"]; //TODO
+      var locationTypes = ["Establishment", "Sport"];
 
-  var stringToPrint = "<b>" + userID + "</b><br /><br />";
+      var stringToPrint = "<b>" + userID + "</b><br /><br />";
 
-  var index;
-  for (index = 0; index < locationNames.length; index++) {
-    stringToPrint += locationNames[index] + ", " + locationTypes[index];
-    stringToPrint += "<br />";
+      var index;
+      for (index = 0; index < locationNames.length; index++) {
+        stringToPrint += locationNames[index] + ", " + locationTypes[index];
+        stringToPrint += "<br />";
+      }
+
+      L.marker([responseJson[key]['probes'][probes]['location'].lat,  responseJson[key]['probes'][probes]['location'].lng]).addTo(mymap)
+        .bindPopup(stringToPrint);
+    }
   }
-
-  L.marker([50.088080,  14.420406]).addTo(mymap)
-    .bindPopup(stringToPrint);
 }

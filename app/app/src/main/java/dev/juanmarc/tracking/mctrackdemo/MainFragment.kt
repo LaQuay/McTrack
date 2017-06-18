@@ -18,7 +18,7 @@ import com.github.kittinunf.fuel.Fuel
 class MainFragment : Fragment() {
     var TAG: String = "MainFragment" //TODO Do with TAGNAME
     private val TIME_FOR_NEW_AD: Long = 5000
-    private val STOP_VIDEO_MILIS: Long = 10000
+    private val STOP_VIDEO_MILIS: Long = 100000
     private val BLACK_SCREEN_YOUTUBE: String = "https://www.youtube.com/watch?v=XIMLoLxmTDw"
     private var lastURL: String = ""
 
@@ -69,7 +69,7 @@ class MainFragment : Fragment() {
             result.fold({ d ->
                 Log.e(TAG, d)
 
-                val parsedURL = "https://www.youtube.com/watch?v=5RNkQaDcRAc"
+                val parsedURL = "https://www.youtube.com/watch?v=wOMKUihPNm4"
                 if (parsedURL != lastURL) {
                     lastURL = parsedURL
                     startYoutubeIntent(parsedURL)
