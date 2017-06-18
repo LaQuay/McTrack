@@ -39,7 +39,7 @@ def generate_probe_chunk(chunk_size):
 
 
 def pick_topics():
-    num_topics = random.randint(0, len(topic_list))
+    num_topics = random.randint(1, len(topic_list))
     return random.sample(topic_list, num_topics)
 
 
@@ -77,8 +77,8 @@ def generate_probe():
 
 
 def main():
-    generate_mac_list(10)
-    generate_probe_chunk(100)
+    generate_mac_list(50)
+    generate_probe_chunk(1000)
 
 
 if __name__ == "__main__":
